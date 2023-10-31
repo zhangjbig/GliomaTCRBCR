@@ -1,0 +1,60 @@
+library(stringr)
+library(tidyr)
+
+load("/Users/wanglu/Documents/2021_TC/tb.RData")
+
+#Clinical information update
+c_info <- read.csv("/Users/wanglu/Documents/2021_TC/XZY_database/CGGA_clinical_TCRBCR.csv") 
+
+tmps <- cbind(Sample,intersect_data[,1:ncol(tmp)])  
+
+tmps <- tmps[which(tmps$CDR3.aa != "out_of_frame"),]
+tmps <- tmps[which(tmps$CDR3.aa != "partial"),]
+tmps <- tmps[which(tmps$CDR3.aa != "?"),]
+tmps <- tmps [!grepl("_",tmps$CDR3.aa),] 
+tmps <- tmps [!grepl("\\?",tmps$CDR3.aa),] 
+
+#-----------------------------#
+#----------  mutnoncodel ----------#
+mutnoncodel <- c_info[which(c_info$Sample =="IDH-MUT_X1p19q-Noncodel"),]
+
+category <-  tmps[which(tmps$CGGA_ID %in% mutnoncodel$CGGA_ID),] 
+Chain <- category[which(str_detect(category$V.name, "IGH")),]  
+Chain <- Chain[which(Chain$D.name!="*"),] 
+Chain <- Chain[which(Chain$J.name!="*"),]  
+
+Chain <- Chain[,c("Sample","CGGA_ID","Clones","CDR3.aa","V.name","D.name","J.name")]
+Chain <- aggregate(x =Chain$Clones, by=list(Sample = Chain$Sample, CGGA_ID = Chain$CGGA_ID,
+                                            CDR3.aa = Chain$CDR3.aa, V.name = Chain$V.name,
+                                            D.name = Chain$D.name,
+                                            J.name = Chain$J.name),FUN=sum)
+colnames(Chain)[7] <- "Clones"
+
+
+mutnoncodel_Chain <- Chain[,c(3,4,5,6)]
+#以下是所有重复的行，只计算一次
+repeat_Chain <- unique(mutnoncodel_Chain[duplicated(mutnoncodel_Chain),])
+repeat_Chain1 <- unite(repeat_Chain,"newcolname","CDR3.aa","V.name","D.name","J.name",sep = ",",remove = FALSE)
+
+mutnoncodel_Chain1 <- unite(mutnoncodel_Chain,"newcolname","CDR3.aa","V.name","D.name","J.name",sep = ",",remove = FALSE)
+
+public <- mutnoncodel_Chain1[which(mutnoncodel_Chain1$newcolname %in% repeat_Chain1$newcolname),]
+public <- public[,-1]
+public <- unique(public) #72种克隆类型
+
+private <- mutnoncodel_Chain1[-which(mutnoncodel_Chain1$newcolname %in% repeat_Chain1$newcolname),]
+private <- private[,-1] #36019种克隆类型
+
+#计算样本数目
+Chain1 <- Chain
+Chain1 <- unite(Chain1,"newcolname","CDR3.aa","V.name","D.name","J.name",sep = ",",remove = FALSE)
+
+public <- mutnoncodel_Chain1[which(mutnoncodel_Chain1$newcolname %in% repeat_Chain1$newcolname),]
+public_sample <- Chain1[which(Chain1$newcolname %in% public$newcolname),]
+
+private <- mutnoncodel_Chain1[-which(mutnoncodel_Chain1$newcolname %in% repeat_Chain1$newcolname),]
+private_sample <- Chain1[which(Chain1$newcolname %in% private$newcolname),]
+
+#计算一共有多少个样本
+unique_sample <- c(public_sample$CGGA_ID,private_sample$CGGA_ID)
+unique_sample <- unique(unique_sample) #284个样本
