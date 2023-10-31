@@ -1,14 +1,19 @@
 # GliomaTCRBCR
         This is to replicate the analysis of TCR and BCR derived from TRUST4 for gliomas in Chinese population. All scripts are coded in R language. To run scripts, the path needs to be modified accordingly.
 
-### Calculation of diversity,eveness and richness
-    evaluating_indicator: Calculation of diversity,eveness and richness.
-    Folder(treemap): voronoiTreemap.
+        evaluating_indicator: calculating diversity,eveness and richness
+        
+        voronoiTreemap: generating voronoiTreemap
 
-    Folder(gene) : Calculate the frequency of gene and the distribution of gene.
+        FreqGenes: calculating the usage frequency of the genes and the distribution of the genes
 
-    Folder(length): Calculate the distributions of CDR3 length.
+        LengthCDR3: calculating the distributions of the CDR3 length.
 
-    Folder(length_weblogo): Conservative analysis.
+        weblogoAnalysis: perform conservative analysis of amino acids
 
-    Folder(private_public): Analysis of private clonotypes and public clonotypes.
+        private_public_clonotypes: analyze private clonotypes and public clonotypes
+
+###Citation
+        Please cite "Lu Wang, Zhiyuan Xu, Wei Zhang, Lin Li, Xiao Liu and Jing Zhang. Immune repertoire characterization and database construction for the largest Chinese glioma cohort."  
+
+
