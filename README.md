@@ -1,7 +1,8 @@
 # GliomaTCRBCR
-    The path needs to be modified when running the program.
+        This is to replicate the analysis of TCR and BCR derived from TRUST4 for gliomas in Chinese population. All scripts are coded in R language. To run scripts, the path needs to be modified accordingly.
 
-    Folder(evaluating_indicator): Calculation of diversity,eveness and richness.
+### Calculation of diversity,eveness and richness
+    evaluating_indicator: Calculation of diversity,eveness and richness.
     Folder(treemap): voronoiTreemap.
 
     Folder(gene) : Calculate the frequency of gene and the distribution of gene.
